@@ -30,7 +30,7 @@ say that it is unobservable; never claim a runtime pin that was not confirmed. R
 Use the generic `collaboration.spawn_agent` tool only when it is exposed by the
 current tool schema. Each selected subagent must receive an explicit `model`, an
 explicit supported `reasoning_effort`, and `fork_turns: none`. Choose dynamically
-among `gpt-5.6-sol`, `gpt-5.6-terra`, and `gpt-5.6-luna` from the task's risk,
+among `gpt-6.1-sol`, `gpt-6-sol`, and `gpt-6-luna` from the task's risk,
 context, and independent work available; do not encode a role-to-model mapping or a
 fixed number of subagents. Give every subagent a concrete, bounded, independent
 deliverable while Astra continues useful parent work. Do not duplicate the parent's
@@ -93,6 +93,6 @@ difference a **same-token API price comparison**, never measured all-Astra behav
 actual net task savings, subscription charges, or improved quality/speed. If parent
 usage is missing, label any available delegated-only comparison separately. With no
 subagents there are no delegation savings. Effort is metadata, not a price multiplier.
-Use the versioned snapshot and disclose its date and promotional Sol pricing. Reject
+Use the versioned snapshot and disclose its date and any promotional rates. Reject
 unsupported pricing regimes rather than silently using standard rates. An illustrative
 fixture is optional and must remain separate from this task's receipt.

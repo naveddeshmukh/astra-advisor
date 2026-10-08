@@ -279,6 +279,33 @@ class CostReceiptTests(unittest.TestCase):
         self.assertTrue(result["illustrative"])
         self.assertEqual(result["pricing"]["snapshot_date"], "2026-09-04")
 
+    def test_current_models_have_exact_distinct_cache_prices(self) -> None:
+        pricing = PLUGIN / "pricing" / "2026-10-08.json"
+        for model, expected in {
+            "gpt-6-astra": "0.0191",
+            "gpt-6.1-sol": "0.00381",
+            "gpt-6-sol": "0.00382",
+            "gpt-6-luna": "0.000191",
+        }.items():
+            with self.subTest(model=model):
+                payload = whole_task()
+                payload["agents"] = [{"agent_id": "p", "role": "parent", "calls_complete": True}]
+                payload["calls"] = [atomic_call("p1", "p", model)]
+                result = cost_receipt.calculate_receipt(payload, pricing)
+                self.assertEqual(result["routed_api_price_usd"], expected)
+                self.assertFalse(result["calls"][0]["promotional_rate"])
+
+    def test_cli_defaults_to_current_snapshot_and_prices_current_example(self) -> None:
+        completed = subprocess.run(
+            [sys.executable, str(SCRIPT), str(PLUGIN / "examples" / "gpt-6-usage.json")],
+            check=False, capture_output=True, text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["pricing"]["snapshot_date"], "2026-10-08")
+        self.assertEqual(result["status"], "observed_tokens_api_estimate")
+        self.assertTrue(result["illustrative"])
+
     def test_cli_rejects_nonfinite_json_tokens(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "invalid.json"
